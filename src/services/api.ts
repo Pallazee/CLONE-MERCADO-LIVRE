@@ -1,20 +1,18 @@
-const API_URL = process.env.REACT_APP_API_URL;
+import axios from "axios";
 
-if (!API_URL) {
-  throw new Error("REACT_APP_API_URL não definida");
+const baseURL = process.env.REACT_APP_API_URL || "http://localhost:3333";
+
+const api = axios.create({
+  baseURL,
+});
+
+export interface PreferenceResponse {
+  id: string;
 }
 
-export async function createPreference() {
-  const response = await fetch(`${API_URL}/create_preference`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export const createPreference = async (): Promise<PreferenceResponse> => {
+  const response = await api.post<PreferenceResponse>("/create_preference");
+  return response.data;
+};
 
-  if (!response.ok) {
-    throw new Error("Erro ao criar preferência");
-  }
-
-  return response.json();
-}
+export default api;
