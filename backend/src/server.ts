@@ -1,25 +1,26 @@
-import dotenv from "dotenv";
-dotenv.config();
+import dotenv from "dotenv"
+dotenv.config()
 
-import express from "express";
-import cors from "cors";
-import { MercadoPagoConfig, Preference } from "mercadopago";
+import express from "express"
+import cors from "cors"
+import { MercadoPagoConfig, Preference } from "mercadopago"
 
-console.log("🚀 SERVER FILE EXECUTADO");
+const app = express()
+app.use(cors())
+app.use(express.json())
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-console.log("🔐 TOKEN:", process.env.MP_ACCESS_TOKEN);
-
+// 🔐 Mercado Pago config
 const client = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-});
+  accessToken: process.env.MP_ACCESS_TOKEN as string
+})
 
-app.post("/create_preference", async (req, res) => {
+app.get("/", (_req, res) => {
+  res.send("🔥 Backend Mercado Pago ONLINE")
+})
+
+app.post("/create_preference", async (_req, res) => {
   try {
-    const preference = new Preference(client);
+    const preference = new Preference(client)
 
     const response = await preference.create({
       body: {
@@ -28,37 +29,34 @@ app.post("/create_preference", async (req, res) => {
             id: "camiseta-branca-001",
             title: "Camiseta Branca",
             quantity: 1,
-            unit_price: 1.99,
-          },
+            unit_price: 1.99
+          }
         ],
         payment_methods: {
-          excluded_payment_methods: [],
-          excluded_payment_types: [],
-          installments: 12,
+          installments: 12
         },
         back_urls: {
-          success: "http://localhost:3000/success",
-          failure: "http://localhost:3000/failure",
-          pending: "http://localhost:3000/pending",
+          success: "https://SEU-FRONT.onrender.com/success",
+          failure: "https://SEU-FRONT.onrender.com/failure",
+          pending: "https://SEU-FRONT.onrender.com/pending"
         },
-      
-      },
-    });
+        auto_return: "approved"
+      }
+    })
 
-    console.log("✅ PREFERENCE CRIADA:", response.id);
-
-    res.json({ id: response.id });
+    res.json({ id: response.id })
   } catch (error: any) {
-    console.error("❌ ERRO MERCADO PAGO:");
-    console.error(error);
+    console.error("❌ Erro Mercado Pago:", error)
 
     res.status(500).json({
       error: "Erro ao criar preferência",
-      details: error?.message || error,
-    });
+      details: error?.message
+    })
   }
-});
+})
 
-app.listen(3333, () => {
-  console.log("🔥 Backend rodando em http://localhost:3333");
-});
+// 🚨 PORTA OBRIGATÓRIA PRA CLOUD
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+  console.log(`🚀 Backend rodando na porta ${PORT}`)
+})
