@@ -6,7 +6,11 @@ import cors from "cors"
 import { MercadoPagoConfig, Preference } from "mercadopago"
 
 const app = express()
-app.use(cors())
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"],
+}));
+
 app.use(express.json())
 
 // 🔐 Mercado Pago config
@@ -55,8 +59,8 @@ app.post("/create_preference", async (_req, res) => {
   }
 })
 
-// 🚨 PORTA OBRIGATÓRIA PRA CLOUD
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3333;
+
 app.listen(PORT, () => {
-  console.log(`🚀 Backend rodando na porta ${PORT}`)
-})
+  console.log(`🔥 Backend rodando na porta ${PORT}`);
+});
