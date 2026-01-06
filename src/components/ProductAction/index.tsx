@@ -19,6 +19,30 @@ import {
 } from "./styles";
 
 const ProductAction: React.FC = () => {
+
+  const handleBuyNow = async () => {
+    try {
+      const response = await fetch("http://localhost:3333/create_preference", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (!data.id) {
+        throw new Error("Preference ID não retornado");
+      }
+
+     window.location.href =`https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${data.id}`;
+
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao iniciar pagamento");
+    }
+  };
+
   return (
     <Container>
       <Condition>Novo | 9 vendidos</Condition>
@@ -32,30 +56,30 @@ const ProductAction: React.FC = () => {
 
       <PriceCard>
         <PriceRow>
-          <span className='symbol'>R$</span>
-          <span className='fraction'>34</span>
-          <span className='cents'>99</span>
+          <span className="symbol">R$</span>
+          <span className="fraction">1</span>
+          <span className="cents">99</span>
         </PriceRow>
 
-        <InstallmentsInfo>em 3x de R$ 11,67</InstallmentsInfo>
+        <InstallmentsInfo>em 3x de R$ 0,68</InstallmentsInfo>
       </PriceCard>
 
       <StockStatus>Estoque disponível</StockStatus>
 
       <MethodCard>
         <CheckIcon />
-
         <div>
-          <span className='title'>Frete Grátis</span>
-          <span className='details'>Benefício Lorem Ipsum</span>
-          <a href='#' className='more'>
-            Ver mais opções
-          </a>
+          <span className="title">Frete Grátis</span>
+          <span className="details">Benefício Lorem Ipsum</span>
+          <a href="#">Ver mais opções</a>
         </div>
       </MethodCard>
 
       <Actions>
-        <Button solid>Comprar agora</Button>
+        <Button solid onClick={handleBuyNow}>
+          Comprar agora
+        </Button>
+
         <Button>Adicionar ao carrinho</Button>
       </Actions>
 
