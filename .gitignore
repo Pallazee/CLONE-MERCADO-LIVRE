@@ -28,3 +28,4 @@ backend/.env
 
 # root env
 .env
+package-lock.json
