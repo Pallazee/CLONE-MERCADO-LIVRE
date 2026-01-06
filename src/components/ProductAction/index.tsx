@@ -1,4 +1,5 @@
 import React from "react";
+import { createPreference } from "../../services/api";
 
 import {
   Container,
@@ -19,24 +20,15 @@ import {
 } from "./styles";
 
 const ProductAction: React.FC = () => {
-
   const handleBuyNow = async () => {
     try {
-      const response = await fetch("http://localhost:3333/create_preference", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
+      const data = await createPreference();
 
       if (!data.id) {
         throw new Error("Preference ID não retornado");
       }
 
-     window.location.href =`https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${data.id}`;
-
+      window.location.href = `https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${data.id}`;
     } catch (error) {
       console.error(error);
       alert("Erro ao iniciar pagamento");
