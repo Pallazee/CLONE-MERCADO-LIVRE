@@ -8,12 +8,13 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "express": "^5.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "mercadopago": "^2.11.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.27",
     "typescript": "^5.9.3"
   }
 }
